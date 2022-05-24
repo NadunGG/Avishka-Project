@@ -113,7 +113,7 @@ $(document).ready(function () {
     // lightbox
     $(".work-item-inner").click(function () {
 
-        index = $(this).parent(".work-item").index();
+        index = $(this).parent(".work-item").index() - 1;
         $(".lightbox").addClass("open");
         lightboxSlideShow();
     })
@@ -152,6 +152,7 @@ function lightboxSlideShow() {
     $(".lightbox-img").attr("src", imgSrc);
     $(".lightbox-category").html(category);
     $(".lightbox-counter").html((index + 1) + "/" + totalWorkItems);
+    console.log(index);
 
 
 }
