@@ -1,2 +1,2 @@
-# Avishka-Project
- Avishka_Photography
+# Photography Portfolio
+ Avishka Photography
