@@ -4,6 +4,14 @@
 
 let index = 0;
 const totalWorkItems = $(".work-item").length;
+let totalServiceItems = 0;
+let isService = true
+let serveIndex = 0;
+let position = 0
+const services = {
+    weddingphoto: 3,
+    preshoot: 2
+}
 
 $(window).on("load", function () {
     $(".preloader").addClass("loaded");
@@ -112,26 +120,84 @@ $(document).ready(function () {
 
     // lightbox
     $(".work-item-inner").click(function () {
-
+        console.log(this);
         index = $(this).parent(".work-item").index() - 1;
+        console.log(index);
         $(".lightbox").addClass("open");
-        lightboxSlideShow();
+        isService = false
+        lightboxSlideShow("work");
+    })
+    $(".service-item-inner").click(function () {
+        position = $(this).parent(".service-item").index();
+        console.log(position);
+        $(".lightbox").addClass("open");
+        isService = true
+        serveIndex = 0;
+        switch (position) {
+            case 0:
+                totalServiceItems = services.weddingphoto;
+                break;
+            case 1:
+                totalServiceItems = services.preshoot;
+                break;
+        }
+        lightboxSlideShow("service");
+
     })
     $(".lightbox .prev").click(function () {
-        if (index == 0) {
-            index = totalWorkItems - 1;
-        } else {
-            index--;
+        if (isService) {
+            switch (position) {
+                case 0:
+                    totalServiceItems = services.weddingphoto;
+                    break;
+                case 1:
+                    totalServiceItems = services.preshoot;
+                    break;
+            }
+            if (serveIndex == 0) {
+                serveIndex = totalServiceItems - 1;
+            } else {
+                serveIndex--;
+            }
+            lightboxSlideShow("service");
+
         }
-        lightboxSlideShow();
+        if (!isService) {
+            if (index == 0) {
+                index = totalWorkItems - 1;
+            } else {
+                index--;
+            }
+            lightboxSlideShow("work");
+        }
+
     })
     $(".lightbox .next").click(function () {
-        if (index == totalWorkItems - 1) {
-            index = 0
-        } else {
-            index++;
+        if (isService) {
+            switch (position) {
+                case 0:
+                    totalServiceItems = services.weddingphoto;
+                    break;
+                case 1:
+                    totalServiceItems = services.preshoot;
+                    break;
+            }
+            if (serveIndex == totalServiceItems - 1) {
+                serveIndex = 0;
+            } else {
+                serveIndex++;
+            }
+            lightboxSlideShow("service");
+
         }
-        lightboxSlideShow();
+        if (!isService) {
+            if (index == totalWorkItems - 1) {
+                index = 0
+            } else {
+                index++;
+            }
+            lightboxSlideShow("work");
+        }
     })
 
     // close lightbox
@@ -146,13 +212,34 @@ $(document).ready(function () {
     })
 })
 
-function lightboxSlideShow() {
-    const imgSrc = $(".work-item").eq(index).find("img").attr("data-large");
-    const category = $(".work-item").eq(index).find("h4").html();
+function lightboxSlideShow(section) {
+
+    let imgSrc = ""
+    let category = ""
+    if (section == "work") {
+        imgSrc = $(".work-item").eq(index).find("img").attr("data-large");
+        category = $(".work-item").eq(index).find("h4").html();
+        $(".lightbox-counter").html((index + 1) + "/" + totalWorkItems);
+    }
+    else if (section == "service") {
+        const serviceDir = "./img/Services Section/large"
+        switch (position) {
+            case 0:
+                imgSrc = serviceDir + `/wedding-photo/${serveIndex}.jpg`
+                break;
+            case 1:
+                imgSrc = serviceDir + `/pre-shoot/${serveIndex}.jpg`
+                break;
+        }
+        category = $(".service-item").eq(position).find("h4").html();
+        $(".lightbox-counter").html((serveIndex + 1) + "/" + totalServiceItems);
+    }
+
+
     $(".lightbox-img").attr("src", imgSrc);
     $(".lightbox-category").html(category);
-    $(".lightbox-counter").html((index + 1) + "/" + totalWorkItems);
-    console.log(index);
+
+
 
 
 }
